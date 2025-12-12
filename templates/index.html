@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Energy Load Predictor</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; }
+        .container { max-width: 600px; margin: auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #333; }
+        label { display: block; margin-top: 10px; font-weight: bold; }
+        input[type=number] { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { background-color: #4CAF50; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; margin-top: 20px; width: 100%; }
+        button:hover { background-color: #45a049; }
+        .result { background-color: #e7f7e7; border: 1px solid #c3e6c3; padding: 15px; border-radius: 4px; margin-top: 20px; text-align: center; }
+        .error { background-color: #f7e7e7; border: 1px solid #e6c3c3; color: red; padding: 15px; border-radius: 4px; margin-top: 20px; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Energy Load Prediction</h1>
+        <p>Input the 8 building geometry parameters to predict the Heating and Cooling Loads.</p>
+
+        <form action="/predict" method="post">
+            <label for="Relative_Compactness">1. Relative Compactness (RC)</label>
+            <input type="number" step="any" id="Relative_Compactness" name="Relative_Compactness" required value="0.76">
+
+            <label for="Surface_Area">2. Surface Area (m²)</label>
+            <input type="number" step="any" id="Surface_Area" name="Surface_Area" required value="686.0">
+
+            <label for="Wall_Area">3. Wall Area (m²)</label>
+            <input type="number" step="any" id="Wall_Area" name="Wall_Area" required value="245.0">
+
+            <label for="Roof_Area">4. Roof Area (m²)</label>
+            <input type="number" step="any" id="Roof_Area" name="Roof_Area" required value="147.0">
+
+            <label for="Overall_Height">5. Overall Height (m)</label>
+            <input type="number" step="any" id="Overall_Height" name="Overall_Height" required value="7.0">
+
+            <label for="Orientation">6. Orientation (2-5)</label>
+            <input type="number" step="1" min="2" max="5" id="Orientation" name="Orientation" required value="3">
+
+            <label for="Glazing_Area">7. Glazing Area (m²)</label>
+            <input type="number" step="any" id="Glazing_Area" name="Glazing_Area" required value="0.25">
+
+            <label for="Glazing_Area_Distribution">8. Glazing Area Distribution (1-5)</label>
+            <input type="number" step="1" min="0" max="5" id="Glazing_Area_Distribution" name="Glazing_Area_Distribution" required value="3">
+
+            <button type="submit">Predict Loads</button>
+        </form>
+
+        {% if heating_result and cooling_result %}
+        <div class="result">
+            <h2>Prediction Results</h2>
+            <p><strong>Predicted Heating Load:</strong> {{ heating_result }} kW</p>
+            <p><strong>Predicted Cooling Load:</strong> {{ cooling_result }} kW</p>
+        </div>
+        {% elif error %}
+        <div class="error">
+            <h2>Error</h2>
+            <p>{{ prediction_text }}</p>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
